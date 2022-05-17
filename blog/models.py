@@ -11,10 +11,10 @@ class Note(models.Model):
     update_at = models.DateTimeField(auto_now=True, verbose_name='Время обновления')
     author = models.ForeignKey(User, on_delete=models.CASCADE)  # todo добавить автора с помощью внешнего ключа
 
-    def __str__(self):  # todo отображение человеко-читаемой записи объекта
+    def __str__(self):
         return f"Запись №{self.id}"
 
-    class Meta:  # todo отображение человеко-читаемой записи модели
+    class Meta:
         verbose_name = _("запись")
         verbose_name_plural = _("записи")
 
@@ -37,11 +37,3 @@ class Comment(models.Model):
     def __str__(self):
         # https://django.fun/docs/django/ru/3.1/ref/models/instances/#django.db.models.Model.get_FOO_display
         return f'{self.get_rating_display()}: {self.author}'
-
-
-class Table(models.Model):
-    field_1 = models.IntegerField()
-    field_2 = models.IntegerField()
-
-    class Meta:
-        unique_together = (("field_1", "field_2"),)
