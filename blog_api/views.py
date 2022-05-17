@@ -1,4 +1,5 @@
 from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView, GenericAPIView
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework import status
@@ -47,3 +48,21 @@ class NoteDetailAPIView(APIView):
         )
 
         return Response(serializer.data)
+
+    def put(self, request, pk):
+        ...
+
+    def patch(self, request, pk):
+        ...
+
+    def delete(self, request, pk):
+        ...
+
+
+class PublicNoteListAPIView(ListAPIView):
+    queryset = Note.objects.all()
+    serializer_class = serializers.NoteDetailSerializer
+
+    def ordering(self, queryset):
+        # https://docs.djangoproject.com/en/4.0/ref/models/querysets/#order-by
+        ...

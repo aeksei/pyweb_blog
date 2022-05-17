@@ -50,3 +50,7 @@ class NoteDetailSerializer(serializers.ModelSerializer):
         # Конвертируем дату в строку в новом формате
         ret['create_at'] = create_at.strftime('%d %B %Y %H:%M:%S')
         return ret
+
+
+class NoteUpdateSerializer(serializers.ModelSerializer):
+    ...  # todo update fields
