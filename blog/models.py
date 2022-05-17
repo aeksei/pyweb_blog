@@ -31,8 +31,10 @@ class Comment(models.Model):
 
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     # https://docs.djangoproject.com/en/4.0/topics/db/examples/many_to_one/#many-to-one-relationships
-    note = models.ForeignKey(Note, on_delete=models.CASCADE)  # todo related_name='comments'
-    rating = models.IntegerField(default=Ratings.WITHOUT_RATING, choices=Ratings.choices, verbose_name='Оценка')
+    note = models.ForeignKey(Note, on_delete=models.CASCADE,
+                             related_name='comments')  # default related_name='comment_set'
+    rating = models.IntegerField(default=Ratings.WITHOUT_RATING, choices=Ratings.choices,
+                                 verbose_name='Оценка')
 
     def __str__(self):
         # https://django.fun/docs/django/ru/3.1/ref/models/instances/#django.db.models.Model.get_FOO_display

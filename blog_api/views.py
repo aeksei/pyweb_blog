@@ -6,7 +6,7 @@ from rest_framework import status
 from django.shortcuts import get_object_or_404
 
 from blog.models import Note
-from . import serializers
+from . import serializers, filters
 
 
 class NoteListCreateAPIView(APIView):
@@ -32,7 +32,7 @@ class NoteListCreateAPIView(APIView):
             )
 
         # Записываем новую статью и добавляем текущего пользователя как автора
-        serializer.save(author=request.user)
+        serializer.save(author=request.user)  # author=request.user
         return Response(
             serializer.data,
             status=status.HTTP_201_CREATED
@@ -62,6 +62,17 @@ class NoteDetailAPIView(APIView):
 class PublicNoteListAPIView(ListAPIView):
     queryset = Note.objects.all()
     serializer_class = serializers.NoteDetailSerializer
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(public=True)
+
+    def filter_queryset(self, queryset):
+        queryset = filters.author_id_filter(
+            queryset,
+            author_id=self.request.query_params.get("author_id")
+        )
+        return queryset
 
     def ordering(self, queryset):
         # https://docs.djangoproject.com/en/4.0/ref/models/querysets/#order-by
