@@ -18,19 +18,19 @@ class CommentAdmin(admin.ModelAdmin):
 
 @admin.register(Note)  # связываем админку с моделью
 class NoteAdmin(admin.ModelAdmin):
-    # # Поля в списке
-    list_display = ('title', 'public', 'update_at', 'author', 'id', )
-    #
-    # # Группировка поля в режиме редактирования
+    # Поля в списке
+    list_display = ('title', 'id', 'public', 'update_at', 'author', )
+    # #
+    # # # Группировка поля в режиме редактирования
     fields = (('title', 'public'), 'message', 'author', 'create_at', 'update_at')
     # Поля только для чтения в режиме редактирования
     readonly_fields = ('create_at', 'update_at')
-    #
+    # #
     # Поиск по выбранным полям
-    search_fields = ['title', 'message', ]
+    search_fields = ['title']
     #
-    # # Фильтры справа
-    # list_filter = ('public', 'author', )
+    # Фильтры справа
+    list_filter = ('public', 'author', )
 
     # # Widget для удобного поиска записей
     # autocomplete_fields = ['author']  # todo для поиска по автору
@@ -39,3 +39,4 @@ class NoteAdmin(admin.ModelAdmin):
     # inlines = [
     #     CommentInline
     # ]
+    ...

@@ -20,7 +20,7 @@ class NoteListCreateAPIView(APIView):
 
     def post(self, request: Request):
         data = request.data
-        note = Note(**data)
+        note = Note(**data, author=request.user)
 
         note.save(force_insert=True)
 

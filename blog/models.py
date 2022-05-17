@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 
 
 class Note(models.Model):
-    title = models.CharField(max_length=255, verbose_name='Заголовок')
+    title = models.CharField(max_length=255, verbose_name=_('Заголовок'))
     message = models.TextField(default='', verbose_name='Текст статьи')
     public = models.BooleanField(default=False, verbose_name='Опубликовать')
     create_at = models.DateTimeField(auto_now_add=True, verbose_name='Время создания')
@@ -37,3 +37,11 @@ class Comment(models.Model):
     def __str__(self):
         # https://django.fun/docs/django/ru/3.1/ref/models/instances/#django.db.models.Model.get_FOO_display
         return f'{self.get_rating_display()}: {self.author}'
+
+
+class Table(models.Model):
+    field_1 = models.IntegerField()
+    field_2 = models.IntegerField()
+
+    class Meta:
+        unique_together = (("field_1", "field_2"),)

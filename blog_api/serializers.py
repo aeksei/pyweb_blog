@@ -15,4 +15,5 @@ def note_created(note) -> dict:
         "public": note.public,
         "create_at": note.create_at,
         "update_at": note.update_at,
+        "author": note.author_id
     }
