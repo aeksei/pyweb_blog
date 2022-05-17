@@ -13,35 +13,37 @@ class NoteListCreateAPIView(APIView):
 
     def get(self, request: Request):
         objects = Note.objects.all()
-        return Response([
-            serializers.note_to_json(obj)
-            for obj in objects
-        ])
+        serializer = serializers.NoteSerializer(
+            instance=objects,
+            many=True,
+        )
+        return Response(serializer.data)
 
     def post(self, request: Request):
-        data = request.data
-        note = Note(**data, author=request.user)
+        # Передаем в сериалайзер (валидатор) данные из запроса
+        serializer = serializers.NoteSerializer(data=request.data)
 
-        note.save(force_insert=True)
+        # Проверка параметров
+        if not serializer.is_valid():  # serializer.is_valid(raise_exception=True)
+            return Response(
+                serializer.errors,  # serializer.errors будут все ошибки
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
+        # Записываем новую статью и добавляем текущего пользователя как автора
+        serializer.save(author=request.user)
         return Response(
-            serializers.note_created(note),
+            serializer.data,
             status=status.HTTP_201_CREATED
         )
 
 
 class NoteDetailAPIView(APIView):
     """ Представление, которое позволяет вывести отдельную запись. """
-    def get(self, request, pk):  # todo path param
-        # note = Note.objects.get(pk=pk)
+    def get(self, request, pk):
         note = get_object_or_404(Note, pk=pk)
+        serializer = serializers.NoteDetailSerializer(
+            instance=note,
+        )
 
-        return Response(serializers.note_to_json(note))
-
-    def put(self, request):
-        # todo shortcuts
-        ...
-
-    def patch(self, request):
-        # todo shortcuts
-        ...
+        return Response(serializer.data)
