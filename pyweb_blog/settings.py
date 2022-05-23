@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # 'drf_yasg',  # https://drf-yasg.readthedocs.io/en/stable/readme.html#quickstart
 
     'rest_framework',
 
