@@ -65,9 +65,7 @@ class PublicNoteListAPIView(ListAPIView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        queryset = self.order_queryset(queryset)
-        return queryset.filter(public=True)
 
-    def order_queryset(self, queryset):
-        # https://docs.djangoproject.com/en/4.0/ref/models/querysets/#order-by
-        return queryset.order_by("-create_at")
+        return queryset\
+            .filter(public=True)\
+            .order_by("-create_at")
