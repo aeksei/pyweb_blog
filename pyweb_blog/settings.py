@@ -150,16 +150,18 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #         }
 #     }
 # }
+TOOLBAR_DEBUG = False
 
-try:
-    from pyweb_blog import local_settings
+if TOOLBAR_DEBUG:
+    try:
+        from pyweb_blog import local_settings
 
-    INSTALLED_APPS += local_settings.INSTALLED_APPS
-    MIDDLEWARE = local_settings.MIDDLEWARE + MIDDLEWARE
+        INSTALLED_APPS += local_settings.INSTALLED_APPS
+        MIDDLEWARE = local_settings.MIDDLEWARE + MIDDLEWARE
 
-    INTERNAL_IPS = local_settings.INTERNAL_IPS
-except ImportError as e:
-    import logging
+        INTERNAL_IPS = local_settings.INTERNAL_IPS
+    except ImportError as e:
+        import logging
 
-    logger = logging.getLogger()
-    logger.warning(f"Ошибка импорта. {e}")
+        logger = logging.getLogger()
+        logger.warning(f"Ошибка импорта. {e}")
