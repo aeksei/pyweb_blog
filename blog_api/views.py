@@ -66,19 +66,19 @@ class PublicNoteListAPIView(ListAPIView):
     def get_queryset(self):
         queryset = super().get_queryset()
 
-        return queryset\
-            .filter(public=True)\
-            .order_by("-create_at")
+        # return queryset\
+        #     .filter(public=True)\
+        #     .order_by("-create_at")
 
-        # # todo выполняем оптимизацию many-to-one
+        # todo выполняем оптимизацию many-to-one
         # return queryset \
         #     .filter(public=True) \
         #     .order_by("-create_at")\
         #     .select_related("author")
 
         # # todo выполняем оптимизацию one-to-many
-        # return queryset \
-        #     .filter(public=True) \
-        #     .order_by("-create_at")\
-        #     .select_related("author")\
-        #     .prefetch_related("comment_set")
+        return queryset \
+            .filter(public=True) \
+            .order_by("-create_at")\
+            .select_related("author")\
+            .prefetch_related("comment_set")

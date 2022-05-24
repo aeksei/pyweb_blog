@@ -19,7 +19,10 @@ def all_comments_describe():
     Средний, минимальный, максимальный рейтинг и количество комментариев.
     """
     return Comment.objects.aggregate(  # todo add name
-        Avg("rating"), Min("rating"), Max("rating"), Count("rating")
+        avg=Avg("rating"),
+        min=Min("rating"),
+        max=Max("rating"),
+        count=Count("rating"),
     )
 
 
@@ -53,7 +56,7 @@ def notes_published_describe():
     """Вывести сводную информацию об опубликованных и не опубликованных статьях."""
     published = Count("public", filter=Q(public=True))  # количество опубликованных статей
     unpublished = Count("public", filter=Q(public=False))  # количество неопубликованных статей
-    Note.objects\
+    return Note.objects\
         .aggregate(
             published=published,
             unpublished=unpublished
@@ -67,5 +70,6 @@ def search_in_note_message(first_word, second_word):
     https://docs.djangoproject.com/en/4.0/topics/db/queries/#complex-lookups-with-q-objects
     https://docs.djangoproject.com/en/4.0/ref/models/querysets/#std:fieldlookup-icontains
     """
-    query = Q(message__icontains=first_word) | Q(message__icontains=second_word)
+    query = Q(message__icontains=first_word) | \
+            Q(message__icontains=second_word)
     return Note.objects.filter(query)

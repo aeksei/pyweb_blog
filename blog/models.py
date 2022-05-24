@@ -9,7 +9,8 @@ class Note(models.Model):
     public = models.BooleanField(default=False, verbose_name='Опубликовать')
     create_at = models.DateTimeField(auto_now_add=True, verbose_name='Время создания')
     update_at = models.DateTimeField(auto_now=True, verbose_name='Время обновления')
-    author = models.ForeignKey(User, on_delete=models.CASCADE)  # todo добавить автора с помощью внешнего ключа
+    # author = models.ForeignKey(User, on_delete=models.CASCADE)  # todo добавить автора с помощью внешнего ключа
+    authors = models.ManyToManyField(User)
 
     def __str__(self):
         return f"Запись №{self.id}"
@@ -17,6 +18,10 @@ class Note(models.Model):
     class Meta:
         verbose_name = _("запись")
         verbose_name_plural = _("записи")
+
+    @property
+    def authors_str(self):
+        return ", ".join(str(author) for author in self.authors.all())
 
 
 class Comment(models.Model):
