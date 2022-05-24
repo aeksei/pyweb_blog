@@ -152,7 +152,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # }
 
 try:
-    import local_settings
+    from pyweb_blog import local_settings
 
     INSTALLED_APPS += local_settings.INSTALLED_APPS
     MIDDLEWARE = local_settings.MIDDLEWARE + MIDDLEWARE
