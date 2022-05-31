@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # 'drf_yasg',  # https://drf-yasg.readthedocs.io/en/stable/readme.html#quickstart
+    'django_filters',  # https://www.django-rest-framework.org/api-guide/filtering/#djangofilterbackend
 
     'rest_framework',
 
@@ -166,3 +167,7 @@ if TOOLBAR_DEBUG:
 
         logger = logging.getLogger(__name__)
         logger.warning(f"Ошибка импорта. {e}")
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+}

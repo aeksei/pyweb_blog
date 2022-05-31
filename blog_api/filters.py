@@ -1,4 +1,7 @@
 from django.db.models.query import QuerySet
+from django_filters import rest_framework as filters
+
+from blog.models import Note
 
 
 def author_id_filter(self, queryset: QuerySet):
@@ -28,3 +31,19 @@ def note_create_at__year_filter(self, queryset):
 def note_update_at__month__gte_filter(self, queryset):
     # https://docs.djangoproject.com/en/4.0/ref/models/querysets/#month
     ...
+
+
+class NoteFilter(filters.FilterSet):
+    year = filters.NumberFilter(
+        field_name="create_at",
+        lookup_expr="year",
+        help_text="Год статьи",
+    )
+
+    class Meta:
+        model = Note
+        fields = [
+            'title',
+            'authors',
+            'year',
+        ]

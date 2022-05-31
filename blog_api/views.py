@@ -4,9 +4,11 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
+
 
 from blog.models import Note, Comment
-from . import serializers
+from . import serializers, filters
 
 
 class NoteListCreateAPIView(APIView):
@@ -62,6 +64,8 @@ class NoteDetailAPIView(APIView):
 class PublicNoteListAPIView(ListAPIView):
     queryset = Note.objects.all()
     serializer_class = serializers.NoteDetailSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = filters.NoteFilter
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -69,8 +73,7 @@ class PublicNoteListAPIView(ListAPIView):
         return queryset \
             .filter(public=True) \
             .order_by("-create_at")\
-            .select_related("author")\
-            .prefetch_related("comment_set")
+            .prefetch_related("authors","comment_set")
 
 
 class CommentListAPIView(ListAPIView):
