@@ -36,14 +36,13 @@ def note_update_at__month__gte_filter(self, queryset):
 class NoteFilter(filters.FilterSet):
     year = filters.NumberFilter(
         field_name="create_at",
-        lookup_expr="year",
+        lookup_expr="year",  # create_at__year
         help_text="Год статьи",
     )
 
     class Meta:
         model = Note
         fields = [
-            'title',
-            'authors',
-            'year',
+            'title', 'authors',  # из модели ==
+            'year',  # из фильтра
         ]

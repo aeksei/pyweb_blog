@@ -88,4 +88,8 @@ class CommentListAPIView(ListAPIView):
         if list_rating:
             queryset = queryset.filter(rating__in=query_params.data["rating"])
 
+        author = self.request.query_params.get("author")
+        if author:
+            queryset = queryset.filter(author=author)
+
         return queryset
