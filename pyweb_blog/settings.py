@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django_filters',  # https://www.django-rest-framework.org/api-guide/filtering/#djangofilterbackend
 
     'rest_framework',
+    'rest_framework.authtoken',
 
     'blog',
     'blog_api',
@@ -169,5 +170,8 @@ if TOOLBAR_DEBUG:
         logger.warning(f"Ошибка импорта. {e}")
 
 REST_FRAMEWORK = {
-    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+           'rest_framework.authentication.TokenAuthentication',
+    )
 }
