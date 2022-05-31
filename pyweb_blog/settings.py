@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'drf_yasg',  # https://drf-yasg.readthedocs.io/en/stable/readme.html#quickstart
+    'drf_yasg',  # https://drf-yasg.readthedocs.io/en/stable/readme.html#quickstart
     'django_filters',  # https://www.django-rest-framework.org/api-guide/filtering/#djangofilterbackend
 
     'rest_framework',
