@@ -54,3 +54,9 @@ class NoteDetailSerializer(serializers.ModelSerializer):
 
 class NoteUpdateSerializer(serializers.ModelSerializer):
     ...  # todo update fields
+
+
+class QueryParamsCommentFilterSerializer(serializers.Serializer):
+    rating = serializers.ListField(
+        child=serializers.ChoiceField(choices=Comment.Ratings.choices), required=False,
+    )

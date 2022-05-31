@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 
-from blog.models import Note
+from blog.models import Note, Comment
 from . import serializers
 
 
@@ -66,19 +66,23 @@ class PublicNoteListAPIView(ListAPIView):
     def get_queryset(self):
         queryset = super().get_queryset()
 
-        # return queryset\
-        #     .filter(public=True)\
-        #     .order_by("-create_at")
-
-        # todo выполняем оптимизацию many-to-one
-        # return queryset \
-        #     .filter(public=True) \
-        #     .order_by("-create_at")\
-        #     .select_related("author")
-
-        # # todo выполняем оптимизацию one-to-many
         return queryset \
             .filter(public=True) \
             .order_by("-create_at")\
             .select_related("author")\
             .prefetch_related("comment_set")
+
+
+class CommentListAPIView(ListAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = serializers.CommentSerializer
+
+    def filter_queryset(self, queryset):
+        query_params = serializers.QueryParamsCommentFilterSerializer(data=self.request.query_params)
+        query_params.is_valid(raise_exception=True)
+
+        list_rating = query_params.data.get("rating")
+        if list_rating:
+            queryset = queryset.filter(rating__in=query_params.data["rating"])
+
+        return queryset
