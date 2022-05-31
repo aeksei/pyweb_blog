@@ -1,8 +1,9 @@
 import unittest
 
-from rest_framework.test import APITestCase
+from rest_framework.test import APITestCase, APIClient
 from rest_framework import status
 from django.contrib.auth.models import User
+from rest_framework.authtoken.models import Token
 
 from blog.models import Note
 
@@ -84,3 +85,39 @@ class TestNoteDetailAPIView(APITestCase):
 
     def test_partial_update_object(self):
         ...
+
+
+class NoteDetailAPIView(APITestCase):
+    @classmethod
+    def setUpTestData(cls):
+        user_1 = User.objects.create(username="test_username_1", password="fake_password")
+        user_2 = User.objects.create(username="test_username_2", password="fake_password")
+
+        cls.token_user_1 = Token.objects.create(user=user_1)
+        cls.token_user_2 = Token.objects.create(user=user_2)
+
+        note = Note.objects.create(title="private_user_1_title", public=False)
+        user_1.note_set.add(note)
+        note = Note.objects.create(title="public_user_1_title", public=True)
+        user_1.note_set.add(note)
+
+        note = Note.objects.create(title="private_user_2_title", public=False)
+        user_2.note_set.add(note)
+        note = Note.objects.create(title="public_user_2_title", public=True)
+        user_2.note_set.add(note)
+
+        cls.user_1 = user_1
+        cls.user_2 = user_2
+
+    def setUp(self) -> None:
+        """Перед каждым тестом логиниться"""
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.user_1)
+
+    def test_patch_update(self):
+          # пользователь залогинен
+        other_user_note_pk = 3
+        url = f"/notes/{other_user_note_pk}/"
+
+        resp = self.client.put(url, data={"title":"new_title"}, format="json")
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)

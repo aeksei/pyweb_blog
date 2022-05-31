@@ -5,15 +5,15 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-
+from rest_framework.permissions import IsAuthenticated
 
 from blog.models import Note, Comment
-from . import serializers, filters
+from . import serializers, filters, permissions
 
 
 class NoteListCreateAPIView(APIView):
     """ Представление, которое позволяет вывести весь список записей и добавить новую запись. """
-
+    permission_classes = (IsAuthenticated, )
     def get(self, request: Request):
         objects = Note.objects.all()
         serializer = serializers.NoteSerializer(
@@ -41,25 +41,17 @@ class NoteListCreateAPIView(APIView):
         )
 
 
-class NoteDetailAPIView(APIView):
+class NoteDetailAPIView(RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated|permissions.OnlyAuthorEditNote]
     """ Представление, которое позволяет вывести отдельную запись. """
-    def get(self, request, pk):
-        note = get_object_or_404(Note, pk=pk)
-        serializer = serializers.NoteDetailSerializer(
-            instance=note,
-        )
+    queryset = Note.objects.all()
+    serializer_class = serializers.NoteDetailSerializer
 
-        return Response(serializer.data)
+    def get_queryset(self):
+        queryset = super().get_queryset()
 
-    def put(self, request, pk):
-        ...
-
-    def patch(self, request, pk):
-        ...
-
-    def delete(self, request, pk):
-        ...
-
+        queryset = queryset.filter(authors__in=[self.request.user])
+        return queryset
 
 class PublicNoteListAPIView(ListAPIView):
     queryset = Note.objects.all()
